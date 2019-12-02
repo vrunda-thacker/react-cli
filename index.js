@@ -57,7 +57,11 @@ const createReactApp = () => {
 // cd into the new directory and return a promise
 const cdIntoNewApp = () => {
   return new Promise(resolve => {
-    shell.exec(`cd ${appName}`, () => { resolve() })
+    console.log(appName)
+    shell.exec(`cd ${appName}`, () => { 
+      shell.exec(`pwd`)
+      resolve()
+    })
   })
 }
 
@@ -116,8 +120,11 @@ const run = async () => {
     return false;
   }
 
+  // await cdIntoNewApp()
+  shell.cd(appName)
+  console.log('Ready to configure'.green)
+  shell.exec(`pwd`)
   const answers = await askQuestions();
-  await cdIntoNewApp()
   await installPackages(answers)
   await updateTemplates()
   console.log("All done")
