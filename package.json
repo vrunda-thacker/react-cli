@@ -1,0 +1,19 @@
+{
+  "name": "create-smart-react-app",
+  "version": "1.0.0",
+  "description": "A cli to create react app and other dependencies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "inquirer": "^7.0.0",
+    "shelljs": "^0.8.3"
+  },
+  "bin": {
+    "create-smart-app": "index.js"
+  }
+}
