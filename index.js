@@ -58,7 +58,7 @@ const createReactApp = () => {
 const cdIntoNewApp = () => {
   return new Promise(resolve => {
     console.log(appName)
-    shell.exec(`cd ${appName}`, () => { 
+    shell.exec(`cd ${appName}`, () => {
       shell.exec(`pwd`)
       resolve()
     })
@@ -68,45 +68,31 @@ const cdIntoNewApp = () => {
 // Executes yarn add and then resolves
 const installPackages = ({ useRedux, useThunk, useTypescript, useReactRouter }) => {
   return new Promise(resolve => {
-    // console.log("\nInstalling redux, react-router, react-router-dom, react-redux, and redux-thunk\n".cyan)
-    if (useRedux) {
-      console.log("\nInstalling Redux\n".cyan)
-      shell.exec(`sudo npm install --save redux redux-thunk`, () => {
-        console.log("\nFinished installing Redux\n".green)
-        if (useThunk) {
-          console.log("\nInstalling Redux-Thunk\n".cyan)
-          shell.exec(`sudo npm install --save redux-thunk`, () => {
-            console.log("\nFinished installing Redux-Thunk\n".green)
-            if (useReactRouter) {
-              console.log("\nInstalling React-Router\n".cyan)
-              shell.exec(`sudo npm install --save react-router react-router-dom`, () => {
-                console.log("\nFinished installing React-Router\n".green)
-                resolve()
-              })
-            } else {
-              resolve()
-            }
-          })
-        } else {
-          resolve()
-        }
+    const reduxPackages = useRedux === 'y' ? 'redux react-redux' : '';
+    const thunkPackages = useThunk === 'y' ? 'redux-thunk' : '';
+    const typescriptPackages = useTypescript === 'y' ? 'typescript' : '';
+    const routerPackages = useReactRouter === 'y' ? 'react-router react-router-dom' : '';
+
+    console.log("\nInstalling packages\n".cyan)
+      shell.exec(`npm install --save ${reduxPackages} ${thunkPackages} ${typescriptPackages} ${routerPackages}`, () => {
+        console.log("\nFinished installing packages\n".green)
+        resolve()
       })
-    }
   })
 }
 
 const updateTemplates = () => {
-  return new Promise(resolve=>{
+  return new Promise(resolve => {
     let promises = []
-    Object.keys(templates).forEach((fileName, i)=>{
-      promises[i] = new Promise(res=>{
-        fs.writeFile(`${appDirectory}/src/${fileName}`, templates[fileName], function(err) {
-            if(err) { return console.log(err) }
-            res()
+    Object.keys(templates).forEach((fileName, i) => {
+      promises[i] = new Promise(res => {
+        fs.writeFile(`${appDirectory}/src/${fileName}`, templates[fileName], function (err) {
+          if (err) { return console.log(err) }
+          res()
         })
       })
     })
-    Promise.all(promises).then(()=>{resolve()})
+    Promise.all(promises).then(() => { resolve() })
   })
 }
 
@@ -120,13 +106,11 @@ const run = async () => {
     return false;
   }
 
-  // await cdIntoNewApp()
   shell.cd(appName)
   console.log('Ready to configure'.green)
-  shell.exec(`pwd`)
   const answers = await askQuestions();
   await installPackages(answers)
   await updateTemplates()
-  console.log("All done")
+  console.log("All done! You are ready to get started")
 }
 run()
